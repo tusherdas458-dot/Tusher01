@@ -11,7 +11,7 @@ const PLANS = [
     monthly: 500,
     quarterly: 1400,
     annual: 5000,
-    features: ["Gym Access", "No Air conditioner", "Personal Trainer for 1-2 week"]
+    features: ["Gym Access", "No Air conditioner", "Personal Trainer for 1 week"]
   },
   {
     id: "pro",
@@ -20,6 +20,14 @@ const PLANS = [
     monthly: 700,
     quarterly: 1900,
     annual: 7000,
+    features: ["Gym Access", "Air conditioner", "Personal Trainer for 1 week"]
+  },
+  {
+    id: "elite",
+    name: "Elite Plan",
+    monthly: 2500,
+    quarterly: 7000,
+    annual: 25000,
     features: ["Gym Access", "Air conditioner", "Personal Trainer"]
   }
 ];
@@ -36,7 +44,8 @@ export default function Memberships() {
     category: 'Student',
     mobile: '',
     photos: [] as File[],
-    captchaInput: ''
+    captchaInput: '',
+    coach: 'Rajesh Sarma'
   });
   
   const [captcha, setCaptcha] = useState({ a: 0, b: 0, sum: 0 });
@@ -81,7 +90,14 @@ export default function Memberships() {
     setCheckoutStep('billing');
   };
 
-  const totalAmount = formData.category === 'Student' ? 1000 : 1500;
+  const baseAdmission = formData.category === 'Student' ? 1000 : 1500;
+  let coachFee = 0;
+  if (selectedPlan?.id === 'elite') {
+    coachFee = formData.coach === 'Rajesh Sarma' ? (billingCycle === 'monthly' ? 3000 : billingCycle === 'quarterly' ? 9000 : 36000) : (billingCycle === 'monthly' ? 1000 : billingCycle === 'quarterly' ? 3000 : 12000);
+  }
+  const planFee = (selectedPlan?.id === 'elite') ? (billingCycle === 'monthly' ? 500 : billingCycle === 'quarterly' ? 1400 : 5000) : (selectedPlan ? selectedPlan[billingCycle] : 0);
+  const totalAmount = baseAdmission + planFee + coachFee;
+  
   const upiLink = `upi://pay?pa=rajusarma000-2@okaxis&pn=Scavenger%20Gym&am=${totalAmount}&cu=INR`;
 
   return (
@@ -89,33 +105,56 @@ export default function Memberships() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-zinc-950 to-zinc-950 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-4xl mx-auto mb-16">
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Choose Your <span className="text-red-500">Weapon</span></h2>
           <p className="text-zinc-400 font-medium mb-12">Select a membership plan that aligns with your fitness goals. Cancel anytime.</p>
           
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden max-w-md mx-auto mb-12">
-             <table className="w-full text-left">
-               <thead>
-                 <tr className="bg-zinc-800">
-                   <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm">Category</th>
-                   <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm text-right">Admission Fee</th>
-                 </tr>
-               </thead>
-               <tbody className="divide-y divide-white/5">
-                 <tr className="hover:bg-white/[0.02] transition-colors">
-                   <td className="py-4 px-6 text-zinc-300 font-semibold">Students</td>
-                   <td className="py-4 px-6 text-red-400 font-bold text-right">₹1000</td>
-                 </tr>
-                 <tr className="hover:bg-white/[0.02] transition-colors">
-                   <td className="py-4 px-6 text-zinc-300 font-semibold">Adults</td>
-                   <td className="py-4 px-6 text-red-400 font-bold text-right">₹1500</td>
-                 </tr>
-               </tbody>
-             </table>
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden w-full">
+               <table className="w-full text-left">
+                 <thead>
+                   <tr className="bg-zinc-800">
+                     <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm">Category</th>
+                     <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm text-right">Admission Fee</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-white/5">
+                   <tr className="hover:bg-white/[0.02] transition-colors">
+                     <td className="py-4 px-6 text-zinc-300 font-semibold whitespace-nowrap">Students</td>
+                     <td className="py-4 px-6 text-red-400 font-bold text-right whitespace-nowrap">₹1000</td>
+                   </tr>
+                   <tr className="hover:bg-white/[0.02] transition-colors">
+                     <td className="py-4 px-6 text-zinc-300 font-semibold whitespace-nowrap">Adults</td>
+                     <td className="py-4 px-6 text-red-400 font-bold text-right whitespace-nowrap">₹1500</td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
+
+            <div className="bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden w-full">
+               <table className="w-full text-left">
+                 <thead>
+                   <tr className="bg-zinc-800">
+                     <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm">Coach</th>
+                     <th className="py-3 px-6 text-zinc-300 font-bold uppercase tracking-wider text-sm text-right">Personal Trainer Fee</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-white/5">
+                   <tr className="hover:bg-white/[0.02] transition-colors">
+                     <td className="py-4 px-6 text-zinc-300 font-semibold whitespace-nowrap">Rajesh Sarma</td>
+                     <td className="py-4 px-6 text-red-400 font-bold text-right whitespace-nowrap">₹3000</td>
+                   </tr>
+                   <tr className="hover:bg-white/[0.02] transition-colors">
+                     <td className="py-4 px-6 text-zinc-300 font-semibold whitespace-nowrap">Atanu Mallik</td>
+                     <td className="py-4 px-6 text-red-400 font-bold text-right whitespace-nowrap">₹1000</td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {PLANS.map((plan, idx) => (
             <motion.div
               key={plan.id}
@@ -132,10 +171,35 @@ export default function Memberships() {
               )}
               
               <h3 className="text-2xl font-black uppercase tracking-tight mb-2">{plan.name}</h3>
-              <div className="flex items-baseline gap-1 mb-8">
-                <span className="text-4xl font-black">₹{plan[billingCycle]}</span>
-                <span className="text-zinc-500 font-medium text-sm">/ {billingCycle.replace('ly', '')}</span>
-              </div>
+              {plan.id === 'elite' ? (
+                <div className="flex flex-col gap-4 mb-8">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-black">
+                      ₹{
+                        (billingCycle === 'monthly' ? 500 : billingCycle === 'quarterly' ? 1400 : 5000) 
+                        + (formData.coach === 'Rajesh Sarma' ? (billingCycle === 'monthly' ? 3000 : billingCycle === 'quarterly' ? 9000 : 36000) : (billingCycle === 'monthly' ? 1000 : billingCycle === 'quarterly' ? 3000 : 12000))
+                      }
+                    </span>
+                    <span className="text-zinc-500 font-medium text-sm">/ {billingCycle.replace('ly', '')}</span>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-zinc-400 mb-2">Personal Trainer</label>
+                    <select 
+                      value={formData.coach}
+                      onChange={e => setFormData({...formData, coach: e.target.value})}
+                      className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 transition-colors appearance-none text-sm"
+                    >
+                      <option value="Rajesh Sarma">Rajesh Sarma</option>
+                      <option value="Atanu Mallik">Atanu Mallik</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-baseline gap-1 mb-8">
+                  <span className="text-4xl font-black">₹{plan[billingCycle]}</span>
+                  <span className="text-zinc-500 font-medium text-sm">/ {billingCycle.replace('ly', '')}</span>
+                </div>
+              )}
               
               <ul className="space-y-4 mb-8 flex-1">
                 {plan.features.map(feature => (
@@ -228,6 +292,20 @@ export default function Memberships() {
                       </div>
                     </div>
 
+                    {selectedPlan?.id === 'elite' && (
+                      <div>
+                        <label className="block text-sm font-bold uppercase tracking-widest text-zinc-400 mb-2">Personal Trainer</label>
+                        <select 
+                          value={formData.coach}
+                          onChange={e => setFormData({...formData, coach: e.target.value})}
+                          className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors appearance-none"
+                        >
+                          <option value="Rajesh Sarma">Rajesh Sarma</option>
+                          <option value="Atanu Mallik">Atanu Mallik</option>
+                        </select>
+                      </div>
+                    )}
+
                     <div>
                       <label className="block text-sm font-bold uppercase tracking-widest text-zinc-400 mb-2">Photos</label>
                       <div className="relative border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-red-500/50 transition-colors">
@@ -297,7 +375,7 @@ export default function Memberships() {
                                   mobile: formData.mobile,
                                   category: formData.category,
                                   plan: selectedPlan.name,
-                                  amount: selectedPlan[billingCycle] + (formData.category === 'Student' ? 1000 : 1500)
+                                  amount: totalAmount
                                 })
                               });
                             } catch (err) {
@@ -338,9 +416,21 @@ export default function Memberships() {
                       <span className="text-zinc-400 font-medium">Admission Fee ({formData.category})</span>
                       <span className="font-bold text-white">₹{formData.category === 'Student' ? 1000 : 1500}</span>
                     </div>
+                    {selectedPlan && (
+                      <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                        <span className="text-zinc-400 font-medium">{selectedPlan.name} ({billingCycle})</span>
+                        <span className="font-bold text-white">₹{planFee}</span>
+                      </div>
+                    )}
+                    {selectedPlan?.id === 'elite' && (
+                      <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                        <span className="text-zinc-400 font-medium">Trainer Fee ({formData.coach})</span>
+                        <span className="font-bold text-white">₹{coachFee}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between items-center pt-2">
-                      <span className="text-lg font-bold text-zinc-200">Total Amount</span>
-                      <span className="text-3xl font-black text-red-500">₹{totalAmount}</span>
+                       <span className="text-lg font-bold text-zinc-200">Total Amount</span>
+                       <span className="text-3xl font-black text-red-500">₹{totalAmount}</span>
                     </div>
                   </div>
 

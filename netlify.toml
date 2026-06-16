@@ -2,14 +2,16 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["nodemailer", "twilio", "razorpay"]
+
 [[redirects]]
-  # Route API requests to Netlify serverless functions
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/api"
   status = 200
 
 [[redirects]]
-  # Fallback for React Router / SPA navigation
   from = "/*"
   to = "/index.html"
   status = 200
