@@ -367,6 +367,16 @@ export default function Memberships() {
                             }
                             setLoadingPlan(selectedPlan.id);
                             try {
+                              const photosBase64 = await Promise.all(
+                                formData.photos.map(file => {
+                                  return new Promise<{name: string, data: string}>((resolve) => {
+                                    const reader = new FileReader();
+                                    reader.onload = (e) => resolve({ name: file.name, data: e.target?.result as string });
+                                    reader.readAsDataURL(file);
+                                  });
+                                })
+                              );
+
                               await fetch('/api/notify-admin', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -375,7 +385,8 @@ export default function Memberships() {
                                   mobile: formData.mobile,
                                   category: formData.category,
                                   plan: selectedPlan.name,
-                                  amount: totalAmount
+                                  amount: totalAmount,
+                                  photos: photosBase64
                                 })
                               });
                             } catch (err) {

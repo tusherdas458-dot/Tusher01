@@ -16,21 +16,22 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 w-full grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 w-full grid lg:grid-cols-2 gap-12 items-center mt-24 lg:mt-48">
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-300">Unleash The Beast</span>
-          </div>
           
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] -mt-32 lg:-mt-48 mb-20 lg:mb-32">
             Scavenger <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Gym</span>
           </h1>
+
+          <div className="mb-6 text-[34px] font-black italic text-red-500 uppercase tracking-tight leading-[1.1]">
+            <div className="text-white">Special Training for</div>
+            <div>Powerlifting, Weightlifting and Bodybuilding</div>
+          </div>
           
           <p className="text-lg md:text-xl text-zinc-400 mb-8 max-w-lg font-medium">
             "Transform Your Body. Build Your Strength. Unlock Your Potential."
@@ -50,7 +51,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-2 gap-4 lg:ml-auto"
+          className="grid grid-cols-2 gap-4 lg:ml-auto mt-12 lg:mt-32"
         >
           <StatsCard value="300+" label="Members" />
           <StatsCard value="2" label="Expert Trainers" />
